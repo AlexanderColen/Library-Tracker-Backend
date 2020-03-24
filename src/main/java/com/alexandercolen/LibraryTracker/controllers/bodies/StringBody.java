@@ -14,15 +14,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexandercolen.LibraryTracker.models;
+package com.alexandercolen.LibraryTracker.controllers.bodies;
 
 /**
  *
  * @author Alexander Colen
  */
-public enum BookStatusEnum {
-    OWNED,
-    LOANED,
-    BORROWED,
-    WISHED,
+public class StringBody {
+    private String content;
+
+    /**
+     * Get the value of content
+     *
+     * @return the value of content
+     */
+    public String getContent() {
+        return content;
+    }
+
+    /**
+     * Set the value of content
+     *
+     * @param content new value of content
+     */
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

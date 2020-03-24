@@ -16,6 +16,8 @@
  */
 package com.alexandercolen.LibraryTracker.models;
 
+import com.alexandercolen.LibraryTracker.models.enums.BookLocationStatus;
+import com.alexandercolen.LibraryTracker.models.enums.BookProgressStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -28,12 +30,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class UserBook {
     @Id
     private String id;
-    
+
     private String user_id;
     @DBRef
     private Book book;
-    private BookStatusEnum status;
+    private BookLocationStatus location_status;
+    private BookProgressStatus progress_status;
 
+    /**
+     * Default constructor.
+     */
+    public UserBook() {
+        this.location_status = BookLocationStatus.OWNED;
+        this.progress_status = BookProgressStatus.UNREAD;
+    }    
+    
     /**
      * Get the value of id
      *
@@ -89,20 +100,38 @@ public class UserBook {
     }
 
     /**
-     * Get the value of status
+     * Get the value of location_status
      *
-     * @return the value of status
+     * @return the value of location_status
      */
-    public BookStatusEnum getStatus() {
-        return status;
+    public BookLocationStatus getLocation_status() {
+        return location_status;
     }
 
     /**
-     * Set the value of status
+     * Set the value of location_status
      *
-     * @param status new value of status
+     * @param location_status new value of location_status
      */
-    public void setStatus(BookStatusEnum status) {
-        this.status = status;
+    public void setLocation_status(BookLocationStatus location_status) {
+        this.location_status = location_status;
+    }
+
+    /**
+     * Get the value of progress_status
+     *
+     * @return the value of progress_status
+     */
+    public BookProgressStatus getProgress_status() {
+        return progress_status;
+    }
+
+    /**
+     * Set the value of progress_status
+     *
+     * @param progress_status new value of progress_status
+     */
+    public void setProgress_status(BookProgressStatus progress_status) {
+        this.progress_status = progress_status;
     }
 }

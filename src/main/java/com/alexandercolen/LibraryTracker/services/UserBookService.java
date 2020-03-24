@@ -103,7 +103,8 @@ public class UserBookService {
         
         foundUserBook.setUser_id(userBook.getUser_id());
         foundUserBook.setBook(userBook.getBook());
-        foundUserBook.setStatus(userBook.getStatus());
+        foundUserBook.setLocation_status(userBook.getLocation_status());
+        foundUserBook.setProgress_status(userBook.getProgress_status());
         
         return this.userBookRepository.save(foundUserBook);
     }

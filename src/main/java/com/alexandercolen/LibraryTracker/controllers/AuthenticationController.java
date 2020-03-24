@@ -16,6 +16,7 @@
  */
 package com.alexandercolen.LibraryTracker.controllers;
 
+import com.alexandercolen.LibraryTracker.controllers.bodies.AuthenticationBody;
 import com.alexandercolen.LibraryTracker.configurations.JwtTokenProvider;
 import com.alexandercolen.LibraryTracker.models.User;
 import com.alexandercolen.LibraryTracker.repositories.UserRepository;
