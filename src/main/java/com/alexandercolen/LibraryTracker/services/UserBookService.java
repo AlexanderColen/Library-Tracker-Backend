@@ -22,6 +22,8 @@ import com.alexandercolen.LibraryTracker.repositories.BookRepository;
 import com.alexandercolen.LibraryTracker.repositories.UserBookRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,8 +63,13 @@ public class UserBookService {
      * @return The UserBook object with the new ID.
      */
     public UserBook createUserBook(UserBook userBook) {
-        Optional<Book> bookOptional = this.bookRepository.findByISBN(userBook.getBook().getIsbn());
-        Book book = bookOptional.orElse(null);
+        Book book = null;
+        
+        // Check if ISBN is not null before searching.
+        if (userBook.getBook().getIsbn() != null) {
+            Optional<Book> bookOptional = this.bookRepository.findByISBN(userBook.getBook().getIsbn());
+            book = bookOptional.orElse(null);
+        }
         
         // Save new Book if it doesn't exist yet.
         if (book == null) {
