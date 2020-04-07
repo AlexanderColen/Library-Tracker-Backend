@@ -44,7 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "Authentication Controller")
 @CrossOrigin(
-        origins = { "http://localhost:4200"},
+        origins = { "*" },
         methods = { RequestMethod.GET,
                     RequestMethod.POST,
                     RequestMethod.PUT,
