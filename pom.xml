@@ -9,10 +9,10 @@
             <relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.alexandercolen</groupId>
-	<artifactId>LibraryTracker</artifactId>
-	<version>0.2</version>
-	<name>LibraryTracker</name>
-	<description>Library Tracker project using Spring Boot</description>
+	<artifactId>library</artifactId>
+	<version>0.4</version>
+	<name>Library</name>
+	<description>Library tracker project using Spring Boot</description>
 
 	<properties>
 		<java.version>1.8</java.version>
