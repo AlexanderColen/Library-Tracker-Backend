@@ -30,8 +30,8 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author Alexander Colen
  */
 @SpringBootTest
-public class RoleTests {
-    private static final Logger LOG = Logger.getLogger(RoleTests.class.getName());
+public class RoleTest {
+    private static final Logger LOG = Logger.getLogger(RoleTest.class.getName());
     private Role role;
     
     @BeforeAll

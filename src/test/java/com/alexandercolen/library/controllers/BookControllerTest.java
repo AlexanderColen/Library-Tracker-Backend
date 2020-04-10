@@ -41,8 +41,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest()
 @WebAppConfiguration
-public class BookControllerTests extends AbstractControllerTest {
-    private static final Logger LOG = Logger.getLogger(BookControllerTests.class.getName());
+public class BookControllerTest extends AbstractControllerTest {
+    private static final Logger LOG = Logger.getLogger(BookControllerTest.class.getName());
     
     @BeforeAll
     public static void setUpClass() {

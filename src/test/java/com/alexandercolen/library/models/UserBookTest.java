@@ -32,8 +32,8 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author Alexander Colen
  */
 @SpringBootTest
-public class UserBookTests {
-    private static final Logger LOG = Logger.getLogger(UserBookTests.class.getName());
+public class UserBookTest {
+    private static final Logger LOG = Logger.getLogger(UserBookTest.class.getName());
     private UserBook userBook;
     
     @BeforeAll

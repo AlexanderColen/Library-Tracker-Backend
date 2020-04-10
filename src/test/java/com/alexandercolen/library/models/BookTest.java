@@ -30,8 +30,8 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author Alexander Colen
  */
 @SpringBootTest
-public class BookTests {
-    private static final Logger LOG = Logger.getLogger(BookTests.class.getName());
+public class BookTest {
+    private static final Logger LOG = Logger.getLogger(BookTest.class.getName());
     private Book book;
     
     @BeforeAll
