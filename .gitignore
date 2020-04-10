@@ -18,3 +18,4 @@ nb-configuration.xml
 mvnw.cmd
 mvnw
 .mvn/*
+/nbproject/

@@ -22,6 +22,8 @@ import com.alexandercolen.library.repositories.BookRepository;
 import com.alexandercolen.library.repositories.UserBookRepository;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,8 +74,9 @@ public class UserBookService {
         // Save new Book if it doesn't exist yet.
         if (book == null) {
             book = this.bookRepository.save(userBook.getBook());
-            userBook.setBook(book);
         }
+        
+        userBook.setBook(book);
         
         return this.userBookRepository.save(userBook);
     }

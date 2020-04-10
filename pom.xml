@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.alexandercolen</groupId>
 	<artifactId>library</artifactId>
-	<version>0.4</version>
+	<version>0.5</version>
 	<name>Library</name>
 	<description>Library tracker project using Spring Boot</description>
 
@@ -108,6 +108,32 @@
                 <artifactId>json</artifactId>
                 <version>20180130</version>
                 <type>jar</type>
+            </dependency>
+            
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <scope>test</scope>
+                <type>jar</type>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <scope>test</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.opera</groupId>
+                <artifactId>operadriver</artifactId>
+                <scope>test</scope>
+                <version>1.5</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.seleniumhq.selenium</groupId>
+                        <artifactId>selenium-remote-driver</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 	</dependencies>
 

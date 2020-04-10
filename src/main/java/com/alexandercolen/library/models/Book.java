@@ -49,7 +49,7 @@ public class Book {
      * @param pages The amount of pages that the Book has.
      * @param image The cover image URL of the Book.
      */
-    public Book(String isbn, String title, String author, Integer pages, String image) {
+    public Book(String isbn, String title, String author, int pages, String image) {
         super();
         this.isbn = isbn;
         this.title = title;
