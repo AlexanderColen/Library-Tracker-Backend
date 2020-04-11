@@ -67,12 +67,16 @@ public class BookService {
      * @return True if the deletion worked, False otherwise.
      */
     public boolean deleteBook(String id) {
-        this.bookRepository.deleteById(id);
-        
         Optional<Book> bookOptional = this.bookRepository.findById(id);
         Book book = bookOptional.orElse(null);
         
-        return book == null;
+        if (book == null) {
+            return false;
+        }
+        
+        this.bookRepository.deleteById(id);
+                
+        return true;
     }
     
     /**

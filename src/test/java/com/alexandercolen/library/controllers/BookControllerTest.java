@@ -172,7 +172,8 @@ public class BookControllerTest extends AbstractControllerTest {
         assertEquals(200, status);
 
         String content = mvcResult.getResponse().getContentAsString();
-        assertEquals("true", content);
+        assertNotEquals("true", content);
+        assertEquals("false", content);
         
         // Existing Book.
         // Create Book.        
@@ -202,6 +203,7 @@ public class BookControllerTest extends AbstractControllerTest {
 
         content = mvcResult.getResponse().getContentAsString();
         assertEquals("true", content);
+        assertNotEquals("false", content);
         
         // Test if specific Book exists afterwards.
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(uri)
