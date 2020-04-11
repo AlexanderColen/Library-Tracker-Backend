@@ -53,61 +53,72 @@ public class SearchService {
         try {
             Response response = call.execute();
             if (response.isSuccessful()) {
-                
-                // Start parsing the JSON object to fetch our desired info.
-                JSONObject json = new JSONObject(response.body().string());
-                if (json.getInt("totalItems") > 0) {
-                    try {
-                        JSONArray foundItems = json.getJSONArray("items");
-                        foundItems.forEach(item -> {
-                            JSONObject itemJson = (JSONObject) item;
-                            JSONObject itemInfo = itemJson.getJSONObject("volumeInfo");
-                            if (itemInfo.getString("printType").equals("BOOK")) {
-                                Book b = new Book();
-                                
-                                // Set ISBN
-                                if (itemInfo.has("industryIdentifiers")) {
-                                    JSONArray isbnArray = itemInfo.getJSONArray("industryIdentifiers");
-                                    isbnArray.forEach(isbn -> {
-                                        JSONObject isbnJson = (JSONObject) isbn;
-                                        if (isbnJson.getString("type").contains("ISBN")) {
-                                            b.setIsbn(isbnJson.getString("identifier"));
-                                        }
-                                    });
-                                }
-
-                                // Set Title
-                                if (itemInfo.has("title")) {
-                                    b.setTitle(itemInfo.getString("title"));
-                                }
-
-                                // Set Author
-                                if (itemInfo.has("authors")) {
-                                    JSONArray authorArray = itemInfo.getJSONArray("authors");
-                                    b.setAuthor((String) authorArray.get(0));
-                                }
-
-                                // Set Pages
-                                if (itemInfo.has("pageCount")) {
-                                    b.setPages(itemInfo.getInt("pageCount"));
-                                }
-
-                                // Set Cover Image
-                                if (itemInfo.has("imageLinks")) {
-                                    JSONObject imageObj = itemInfo.getJSONObject("imageLinks");
-                                    b.setImage(imageObj.getString("thumbnail"));
-                                }
-
-                                foundBooks.add(b);
-                            }
-                        });
-                    } catch (JSONException ex) {
-                        LOG.log(Level.SEVERE, ex.getMessage());
-                    }
-                }
+                foundBooks = this.parseSearchResponse(response);
             }
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, ex.getMessage());
+        }
+        
+        return foundBooks;
+    }
+    
+    /**
+     * Parse a JSON response to Book objects and place them in a list.
+     * @param response The Response object to parse to JSON to digest Book information.
+     * @return A list of Book objects if parsed from the response, otherwise an empty list.
+     */
+    private List<Book> parseSearchResponse(Response response) throws IOException {
+        List<Book> foundBooks = new ArrayList<>();
+        
+        JSONObject json = new JSONObject(response.body().string());
+        if (json.getInt("totalItems") > 0) {
+            try {
+                JSONArray foundItems = json.getJSONArray("items");
+                foundItems.forEach(item -> {
+                    JSONObject itemJson = (JSONObject) item;
+                    JSONObject itemInfo = itemJson.getJSONObject("volumeInfo");
+                    if (itemInfo.getString("printType").equals("BOOK")) {
+                        Book b = new Book();
+
+                        // Set ISBN
+                        if (itemInfo.has("industryIdentifiers")) {
+                            JSONArray isbnArray = itemInfo.getJSONArray("industryIdentifiers");
+                            isbnArray.forEach(isbn -> {
+                                JSONObject isbnJson = (JSONObject) isbn;
+                                if (isbnJson.getString("type").contains("ISBN")) {
+                                    b.setIsbn(isbnJson.getString("identifier"));
+                                }
+                            });
+                        }
+
+                        // Set Title
+                        if (itemInfo.has("title")) {
+                            b.setTitle(itemInfo.getString("title"));
+                        }
+
+                        // Set Author
+                        if (itemInfo.has("authors")) {
+                            JSONArray authorArray = itemInfo.getJSONArray("authors");
+                            b.setAuthor((String) authorArray.get(0));
+                        }
+
+                        // Set Pages
+                        if (itemInfo.has("pageCount")) {
+                            b.setPages(itemInfo.getInt("pageCount"));
+                        }
+
+                        // Set Cover Image
+                        if (itemInfo.has("imageLinks")) {
+                            JSONObject imageObj = itemInfo.getJSONObject("imageLinks");
+                            b.setImage(imageObj.getString("thumbnail"));
+                        }
+
+                        foundBooks.add(b);
+                    }
+                });
+            } catch (JSONException ex) {
+                LOG.log(Level.SEVERE, ex.getMessage());
+            }
         }
         
         return foundBooks;
