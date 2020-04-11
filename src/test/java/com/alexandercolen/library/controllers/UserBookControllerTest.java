@@ -148,10 +148,10 @@ public class UserBookControllerTest extends AbstractControllerTest {
     }
     
     @Test
-    public void testPostBook() throws Exception {
+    public void testPostUserBook() throws Exception {
         LOG.log(Level.INFO, "Testing POST /api/userbooks...");
         
-        // With existing Book.
+        // With existing Book with ISBN.
         // Create Book.
         String uri = "/api/books";
         Book bookInput = this.createBookModel("978-9-1014-3285-9");
@@ -179,6 +179,41 @@ public class UserBookControllerTest extends AbstractControllerTest {
 
         content = mvcResult.getResponse().getContentAsString();
         UserBook userBookResult = super.mapFromJson(content, UserBook.class);
+        assertNotNull(userBookResult);
+        assertNotNull(userBookResult.getId());
+        assertEquals(userBookResult.getBook().getTitle(), userBookInput.getBook().getTitle());
+        assertEquals(userBookResult.getComment(), userBookInput.getComment());
+        assertEquals(userBookResult.getLocationStatus(), userBookInput.getLocationStatus());
+        assertEquals(userBookResult.getProgressStatus(), userBookInput.getProgressStatus());
+        assertEquals(userBookResult.getUserId(), userBookInput.getUserId());
+        
+        // With existing Book without ISBN.
+        uri = "/api/books";
+        bookInput = this.createBookModel(null);
+        bookInputJson = super.mapToJson(bookInput);
+       
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(bookInputJson))
+            .andReturn();
+
+        content = mvcResult.getResponse().getContentAsString();
+        bookResult = super.mapFromJson(content, Book.class);
+        
+        userBookInput = this.createUserBookModel(bookResult);
+        inputJson = super.mapToJson(userBookInput);
+       
+        uri = "/api/userbooks";
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson))
+            .andReturn();
+
+        status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        content = mvcResult.getResponse().getContentAsString();
+        userBookResult = super.mapFromJson(content, UserBook.class);
         assertNotNull(userBookResult);
         assertNotNull(userBookResult.getId());
         assertEquals(userBookResult.getBook().getTitle(), userBookInput.getBook().getTitle());
