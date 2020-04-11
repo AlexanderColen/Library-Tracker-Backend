@@ -21,9 +21,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -69,7 +69,7 @@ public class BookControllerTest extends AbstractControllerTest {
 
         String content = mvcResult.getResponse().getContentAsString();
         Book[] bookList = super.mapFromJson(content, Book[].class);
-        assertTrue(bookList.length > 0);
+        assertFalse(bookList.length > 0);
         
         LOG.log(Level.INFO, "Finished testing GET /api/books.");
     }
@@ -94,7 +94,7 @@ public class BookControllerTest extends AbstractControllerTest {
         // Existing Book.
         // Create Book.
         uri = "/api/books";
-        Book bookInput = this.createBookModel();
+        Book bookInput = this.createBookModel("978-4-3920-1628-3");
         String inputJson = super.mapToJson(bookInput);
        
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
@@ -133,7 +133,7 @@ public class BookControllerTest extends AbstractControllerTest {
         LOG.log(Level.INFO, "Testing POST /api/books...");
         
         String uri = "/api/books";
-        Book bookInput = this.createBookModel();
+        Book bookInput = this.createBookModel("978-1-1104-3998-0");
         String inputJson = super.mapToJson(bookInput);
        
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
@@ -176,7 +176,7 @@ public class BookControllerTest extends AbstractControllerTest {
         // Existing Book.
         // Create Book.        
         uri = "/api/books";
-        Book bookInput = this.createBookModel();
+        Book bookInput = this.createBookModel("978-4-1933-0570-8");
         String inputJson = super.mapToJson(bookInput);
        
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
@@ -223,7 +223,7 @@ public class BookControllerTest extends AbstractControllerTest {
         // Non-existing Book.
         String uri = "/api/books/123";
         
-        Book bookInput = this.createBookModel();
+        Book bookInput = this.createBookModel("978-5-7899-6859-8");
         String newTitle = "This is a new Book title";
         String inputJson = super.mapToJson(bookInput);
 
@@ -294,8 +294,7 @@ public class BookControllerTest extends AbstractControllerTest {
 //        String criteria = "Book";
 //
 //        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
-//            .contentType(MediaType.APPLICATION_JSON_VALUE)
-//            .content(criteria))
+//            .param("criteria", criteria))
 //            .andReturn();
 //
 //        int status = mvcResult.getResponse().getStatus();
@@ -307,17 +306,4 @@ public class BookControllerTest extends AbstractControllerTest {
 //        
 //        LOG.log(Level.INFO, "Finished testing GET /api/books/find.");
 //    }
-    
-    /**
-     * Create a mock Book model.
-     * @return The created Book model.
-     */
-    private Book createBookModel() {
-        String isbn = "978-0-13-601970-1";
-        String title = "Book Title";
-        String author = "Book Author";
-        int pages = 123;
-        String image = "https://www.image.url.png";
-        return new Book(isbn, title, author, pages, image);
-    }
 }

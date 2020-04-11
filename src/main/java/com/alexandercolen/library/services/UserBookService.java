@@ -22,8 +22,6 @@ import com.alexandercolen.library.repositories.BookRepository;
 import com.alexandercolen.library.repositories.UserBookRepository;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -113,6 +111,7 @@ public class UserBookService {
         foundUserBook.setBook(userBook.getBook());
         foundUserBook.setLocationStatus(userBook.getLocationStatus());
         foundUserBook.setProgressStatus(userBook.getProgressStatus());
+        foundUserBook.setComment(userBook.getComment());
         
         return this.userBookRepository.save(foundUserBook);
     }

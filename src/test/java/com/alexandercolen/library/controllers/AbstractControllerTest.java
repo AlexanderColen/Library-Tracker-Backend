@@ -17,6 +17,11 @@
 package com.alexandercolen.library.controllers;
 
 import com.alexandercolen.library.LibraryApplication;
+import com.alexandercolen.library.controllers.bodies.AuthenticationBody;
+import com.alexandercolen.library.models.Book;
+import com.alexandercolen.library.models.UserBook;
+import com.alexandercolen.library.models.enums.BookLocationStatus;
+import com.alexandercolen.library.models.enums.BookProgressStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,5 +63,48 @@ public abstract class AbstractControllerTest {
     protected <T> T mapFromJson(String json, Class<T> clazz) throws JsonParseException, JsonMappingException, IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(json, clazz);
+    }
+    
+    /**
+     * Create a mock Book model.
+     * @param isbn The ISBN that the Book should have.
+     * @return The created Book model.
+     */
+    protected Book createBookModel(String isbn) {
+        String title = "Book Title";
+        String author = "Book Author";
+        int pages = 123;
+        String image = "https://www.image.url.png";
+        return new Book(isbn, title, author, pages, image);
+    }
+    
+    /**
+     * Create a mock UserBook model.
+     * @param book An already created Book model.
+     * @return The created UserBook model.
+     */
+    protected UserBook createUserBookModel(Book book) {
+        String comment = "This is a comment.";
+        UserBook userBook = new UserBook();
+        userBook.setBook(book);
+        userBook.setComment(comment);
+        userBook.setLocationStatus(BookLocationStatus.OWNED);
+        userBook.setProgressStatus(BookProgressStatus.READ);
+        userBook.setUserId("e1ae98cd-5c0c-4d2c-9f09-043705f38391");
+        
+        return userBook;
+    }
+    
+    /**
+     * Create a AuthenticationBody model.
+     * @param username The username for the User.
+     * @return The created AuthenticationBody model.
+     */
+    protected AuthenticationBody createAuthenticationBody(String username) {
+        String password = "NotAPassword";
+        AuthenticationBody authenticationBody = new AuthenticationBody();
+        authenticationBody.setUsername(username);
+        authenticationBody.setPassword(password);
+        return authenticationBody;
     }
 }
