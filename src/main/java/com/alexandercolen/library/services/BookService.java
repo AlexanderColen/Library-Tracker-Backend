@@ -17,6 +17,7 @@
 package com.alexandercolen.library.services;
 
 import com.alexandercolen.library.models.Book;
+import com.alexandercolen.library.models.dtos.BookDTO;
 import com.alexandercolen.library.repositories.BookRepository;
 import java.util.List;
 import java.util.Optional;
@@ -52,10 +53,11 @@ public class BookService {
     
     /**
      * Insert a book in the database.
-     * @param book The Book with all the fields to insert.
+     * @param bookDTO The BookDTO with all the fields to insert.
      * @return The Book object with the new ID.
      */
-    public Book createBook(Book book) {
+    public Book createBook(BookDTO bookDTO) {
+        Book book = new Book(bookDTO);
         return this.bookRepository.save(book);
     }
     
@@ -76,10 +78,10 @@ public class BookService {
     /**
      * Edit a book in the database.
      * @param id The ID of the Book object.
-     * @param book The updated Book object.
+     * @param bookDTO The updated BookDTO object.
      * @return Null if there is no Book with the ID, otherwise the edited Book object.
      */
-    public Book editBook(String id, Book book) {
+    public Book editBook(String id, BookDTO bookDTO) {
         Optional<Book> bookOptional = this.bookRepository.findById(id);
         Book foundBook = bookOptional.orElse(null);
         
@@ -87,11 +89,11 @@ public class BookService {
             return null;
         }
         
-        foundBook.setIsbn(book.getIsbn());
-        foundBook.setTitle(book.getTitle());
-        foundBook.setAuthor(book.getAuthor());
-        foundBook.setPages(book.getPages());
-        foundBook.setImage(book.getImage());
+        foundBook.setIsbn(bookDTO.getIsbn());
+        foundBook.setTitle(bookDTO.getTitle());
+        foundBook.setAuthor(bookDTO.getAuthor());
+        foundBook.setPages(bookDTO.getPages());
+        foundBook.setImage(bookDTO.getImage());
         
         return this.bookRepository.save(foundBook);
     }

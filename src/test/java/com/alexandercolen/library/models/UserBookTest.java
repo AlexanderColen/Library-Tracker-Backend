@@ -16,6 +16,7 @@
  */
 package com.alexandercolen.library.models;
 
+import com.alexandercolen.library.models.dtos.UserBookDTO;
 import com.alexandercolen.library.models.enums.BookLocationStatus;
 import com.alexandercolen.library.models.enums.BookProgressStatus;
 import java.util.logging.Level;
@@ -49,6 +50,32 @@ public class UserBookTest {
     @BeforeEach
     public void setUp() {
         this.userBook = new UserBook();
+    }
+    
+    @Test
+    public void testContructors() {
+        LOG.log(Level.INFO, "Testing constructors...");
+        
+        // Regular constructor.
+        assertEquals(BookLocationStatus.OWNED, this.userBook.getLocationStatus());
+        assertEquals(BookProgressStatus.UNREAD, this.userBook.getProgressStatus());
+        
+        // Constructor using UserBookDTO.
+        UserBookDTO userBookDTO = new UserBookDTO();
+        userBookDTO.setBook(new Book());
+        userBookDTO.setUserId("123");
+        userBookDTO.setLocationStatus(BookLocationStatus.LOANED);
+        userBookDTO.setProgressStatus(BookProgressStatus.READ);
+        userBookDTO.setComment("This is a comment.");
+        this.userBook = new UserBook(userBookDTO);
+        
+        assertEquals(userBookDTO.getBook(), this.userBook.getBook());
+        assertEquals(userBookDTO.getUserId(), this.userBook.getUserId());
+        assertEquals(userBookDTO.getLocationStatus(), this.userBook.getLocationStatus());
+        assertEquals(userBookDTO.getProgressStatus(), this.userBook.getProgressStatus());
+        assertEquals(userBookDTO.getComment(), this.userBook.getComment());
+        
+        LOG.log(Level.INFO, "Finished testing constructors.");
     }
     
     @Test

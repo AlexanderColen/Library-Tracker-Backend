@@ -17,9 +17,11 @@
 package com.alexandercolen.library.controllers;
 
 import com.alexandercolen.library.LibraryApplication;
-import com.alexandercolen.library.controllers.bodies.AuthenticationBody;
 import com.alexandercolen.library.models.Book;
 import com.alexandercolen.library.models.UserBook;
+import com.alexandercolen.library.models.dtos.BookDTO;
+import com.alexandercolen.library.models.dtos.UserBookDTO;
+import com.alexandercolen.library.models.dtos.UserDTO;
 import com.alexandercolen.library.models.enums.BookLocationStatus;
 import com.alexandercolen.library.models.enums.BookProgressStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -79,32 +81,51 @@ public abstract class AbstractControllerTest {
     }
     
     /**
-     * Create a mock UserBook model.
-     * @param book An already created Book model.
-     * @return The created UserBook model.
+     * Create a mock BookDTO model.
+     * @param isbn The ISBN that the BookDTO should have.
+     * @return The created BookDTO model.
      */
-    protected UserBook createUserBookModel(Book book) {
-        String comment = "This is a comment.";
-        UserBook userBook = new UserBook();
-        userBook.setBook(book);
-        userBook.setComment(comment);
-        userBook.setLocationStatus(BookLocationStatus.OWNED);
-        userBook.setProgressStatus(BookProgressStatus.READ);
-        userBook.setUserId("e1ae98cd-5c0c-4d2c-9f09-043705f38391");
-        
-        return userBook;
+    protected BookDTO createBookDTOModel(String isbn) {
+        String title = "Book Title";
+        String author = "Book Author";
+        int pages = 123;
+        String image = "https://www.image.url.png";
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setIsbn(isbn);
+        bookDTO.setTitle(title);
+        bookDTO.setAuthor(author);
+        bookDTO.setPages(pages);
+        bookDTO.setImage(image);
+        return bookDTO;
     }
     
     /**
-     * Create a AuthenticationBody model.
-     * @param username The username for the User.
-     * @return The created AuthenticationBody model.
+     * Create a mock UserBookDTO model.
+     * @param book An already created Book model.
+     * @return The created UserBookDTO model.
      */
-    protected AuthenticationBody createAuthenticationBody(String username) {
+    protected UserBookDTO createUserBookDTOModel(Book book) {
+        String comment = "This is a comment.";
+        UserBookDTO userBookDTO = new UserBookDTO();
+        userBookDTO.setBook(book);
+        userBookDTO.setComment(comment);
+        userBookDTO.setLocationStatus(BookLocationStatus.OWNED);
+        userBookDTO.setProgressStatus(BookProgressStatus.READ);
+        userBookDTO.setUserId("e1ae98cd-5c0c-4d2c-9f09-043705f38391");
+        
+        return userBookDTO;
+    }
+    
+    /**
+     * Create a UserDTO model.
+     * @param username The username for the User.
+     * @return The created UserDTO model.
+     */
+    protected UserDTO createUserDTO(String username) {
         String password = "NotAPassword";
-        AuthenticationBody authenticationBody = new AuthenticationBody();
-        authenticationBody.setUsername(username);
-        authenticationBody.setPassword(password);
-        return authenticationBody;
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
+        userDTO.setPassword(password);
+        return userDTO;
     }
 }

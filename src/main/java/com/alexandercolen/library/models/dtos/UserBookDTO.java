@@ -14,58 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexandercolen.library.models;
+package com.alexandercolen.library.models.dtos;
 
-import com.alexandercolen.library.models.dtos.UserBookDTO;
+import com.alexandercolen.library.models.Book;
 import com.alexandercolen.library.models.enums.BookLocationStatus;
 import com.alexandercolen.library.models.enums.BookProgressStatus;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  *
  * @author Alexander Colen
  */
-@Document(collection = "userbooks")
-public class UserBook {
-    @Id
+public class UserBookDTO {
     private String id;
-
     private String userId;
-    @DBRef
     private Book book;
     private BookLocationStatus locationStatus;
     private BookProgressStatus progressStatus;
     private String comment;
 
     /**
-     * Default constructor.
-     */
-    public UserBook() {
-        this.locationStatus = BookLocationStatus.OWNED;
-        this.progressStatus = BookProgressStatus.UNREAD;
-    }
-    
-    /**
-     * Constructor using UserBookDTO.
-     * @param userBookDTO The UserBookDTO object to build the UserBook from.
-     */
-    public UserBook(UserBookDTO userBookDTO) {
-        this.book = userBookDTO.getBook();
-        this.userId = userBookDTO.getUserId();
-        this.locationStatus = userBookDTO.getLocationStatus();
-        this.progressStatus = userBookDTO.getProgressStatus();
-        this.comment = userBookDTO.getComment();
-    }
-    
-    /**
      * Get the value of id
      *
      * @return the value of id
      */
     public String getId() {
-        return this.id;
+        return id;
     }
 
     /**
@@ -83,7 +56,7 @@ public class UserBook {
      * @return the value of userId
      */
     public String getUserId() {
-        return this.userId;
+        return userId;
     }
 
     /**
@@ -101,7 +74,7 @@ public class UserBook {
      * @return the value of book
      */
     public Book getBook() {
-        return this.book;
+        return book;
     }
 
     /**
@@ -119,7 +92,7 @@ public class UserBook {
      * @return the value of locationStatus
      */
     public BookLocationStatus getLocationStatus() {
-        return this.locationStatus;
+        return locationStatus;
     }
 
     /**
@@ -137,7 +110,7 @@ public class UserBook {
      * @return the value of progressStatus
      */
     public BookProgressStatus getProgressStatus() {
-        return this.progressStatus;
+        return progressStatus;
     }
 
     /**
@@ -155,7 +128,7 @@ public class UserBook {
      * @return the value of comment
      */
     public String getComment() {
-        return this.comment;
+        return comment;
     }
 
     /**

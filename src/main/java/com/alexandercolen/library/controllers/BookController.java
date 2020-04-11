@@ -17,6 +17,7 @@
 package com.alexandercolen.library.controllers;
 
 import com.alexandercolen.library.models.Book;
+import com.alexandercolen.library.models.dtos.BookDTO;
 import com.alexandercolen.library.services.BookService;
 import com.alexandercolen.library.services.SearchService;
 import io.swagger.annotations.Api;
@@ -68,8 +69,8 @@ public class BookController {
     
     @ApiOperation(value = "Post a Book.")
     @PostMapping()
-    public Book postBook(@RequestBody Book book) {
-        return this.bookService.createBook(book);
+    public Book postBook(@RequestBody BookDTO bookDTO) {
+        return this.bookService.createBook(bookDTO);
     }
     
     @ApiOperation(value = "Delete a Book.")
@@ -80,8 +81,8 @@ public class BookController {
     
     @ApiOperation(value = "Edit a Book.")
     @PutMapping(value = "/{id}")
-    public Book putBook(@PathVariable("id") String id, @RequestBody Book book) {
-        return this.bookService.editBook(id, book);
+    public Book putBook(@PathVariable("id") String id, @RequestBody BookDTO bookDTO) {
+        return this.bookService.editBook(id, bookDTO);
     }
     
     @ApiOperation(value = "Find a new Book.")

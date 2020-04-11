@@ -16,6 +16,7 @@
  */
 package com.alexandercolen.library.models;
 
+import com.alexandercolen.library.models.dtos.BookDTO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterAll;
@@ -50,9 +51,10 @@ public class BookTest {
     }
     
     @Test
-    public void testConstructor() {
-        LOG.log(Level.INFO, "Testing constructor...");
+    public void testConstructors() {
+        LOG.log(Level.INFO, "Testing constructors...");
         
+        // Full constructor.
         String isbn = "978-0-13-601970-1";
         String title = "Book Title";
         String author = "Book Author";
@@ -66,7 +68,22 @@ public class BookTest {
         assertEquals(pages, this.book.getPages());
         assertEquals(image, this.book.getImage());
         
-        LOG.log(Level.INFO, "Finished testing constructor.");
+        // Constructor using BookDTO.
+        BookDTO bookDTO = new BookDTO();
+        bookDTO.setIsbn(isbn);
+        bookDTO.setTitle(title);
+        bookDTO.setAuthor(author);
+        bookDTO.setPages(pages);
+        bookDTO.setImage(image);
+        this.book = new Book(bookDTO);
+        
+        assertEquals(bookDTO.getIsbn(), this.book.getIsbn());
+        assertEquals(bookDTO.getTitle(), this.book.getTitle());
+        assertEquals(bookDTO.getAuthor(), this.book.getAuthor());
+        assertEquals(bookDTO.getPages(), this.book.getPages());
+        assertEquals(bookDTO.getImage(), this.book.getImage());
+        
+        LOG.log(Level.INFO, "Finished testing constructors.");
     }
     
     @Test

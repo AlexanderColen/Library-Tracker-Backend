@@ -14,15 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexandercolen.library.controllers.bodies;
+package com.alexandercolen.library.models.dtos;
 
+import com.alexandercolen.library.models.Role;
+import com.alexandercolen.library.models.User;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Test;
 import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
@@ -30,61 +34,61 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author Alexander Colen
  */
 @SpringBootTest
-public class AuthenticationBodyTest {
-    private static final Logger LOG = Logger.getLogger(AuthenticationBodyTest.class.getName());
-    private AuthenticationBody authenticationBody;
+public class UserDTOTest {
+    private static final Logger LOG = Logger.getLogger(UserDTOTest.class.getName());
+    private UserDTO userDTO;
     
     @BeforeAll
     public static void setUpClass() {
-        LOG.log(Level.INFO, "Starting AuthenticationBody body Testing...");
+        LOG.log(Level.INFO, "Starting UserDTO model Testing...");
     }
     
     @AfterAll
     public static void tearDownClass() {
-        LOG.log(Level.INFO, "Finished AuthenticationBody body Testing.");
+        LOG.log(Level.INFO, "Finished UserDTO model Testing.");
     }
     
     @BeforeEach
     public void setUp() {
-        this.authenticationBody = new AuthenticationBody();
+        this.userDTO = new UserDTO();
     }
-
+    
     @Test
     public void testUsernameProperties() {
         LOG.log(Level.INFO, "Testing Username properties...");
         
-        assertEquals(null, this.authenticationBody.getUsername());
+        assertEquals(null, this.userDTO.getUsername());
         
-        String username = "TestUser123";
-        this.authenticationBody.setUsername(username);
-        assertEquals(username, this.authenticationBody.getUsername());
+        String username = "LibraryUser12";
+        this.userDTO.setUsername(username);
+        assertEquals(username, this.userDTO.getUsername());
         
         username = "";
-        this.authenticationBody.setUsername(username);
-        assertEquals(username, this.authenticationBody.getUsername());
-     
-        this.authenticationBody.setUsername(null);
-        assertEquals(null, this.authenticationBody.getUsername());
+        this.userDTO.setUsername(username);
+        assertEquals(username, this.userDTO.getUsername());
+        
+        this.userDTO.setUsername(null);
+        assertEquals(null, this.userDTO.getUsername());
         
         LOG.log(Level.INFO, "Finished testing Username properties.");
     }
-
+    
     @Test
     public void testPasswordProperties() {
         LOG.log(Level.INFO, "Testing Password properties...");
         
-        assertEquals(null, this.authenticationBody.getPassword());
+        assertEquals(null, this.userDTO.getPassword());
         
         String password = "NotAPassword";
-        this.authenticationBody.setPassword(password);
-        assertEquals(password, this.authenticationBody.getPassword());
+        this.userDTO.setPassword(password);
+        assertEquals(password, this.userDTO.getPassword());
         
         password = "";
-        this.authenticationBody.setPassword(password);
-        assertEquals(password, this.authenticationBody.getPassword());
-     
-        this.authenticationBody.setPassword(null);
-        assertEquals(null, this.authenticationBody.getPassword());
+        this.userDTO.setPassword(password);
+        assertEquals(password, this.userDTO.getPassword());
+        
+        this.userDTO.setPassword(null);
+        assertEquals(null, this.userDTO.getPassword());
         
         LOG.log(Level.INFO, "Finished testing Password properties.");
     }

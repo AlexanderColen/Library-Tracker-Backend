@@ -17,6 +17,7 @@
 package com.alexandercolen.library.controllers;
 
 import com.alexandercolen.library.models.Book;
+import com.alexandercolen.library.models.dtos.BookDTO;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterAll;
@@ -94,8 +95,8 @@ public class BookControllerTest extends AbstractControllerTest {
         // Existing Book.
         // Create Book.
         uri = "/api/books";
-        Book bookInput = this.createBookModel("978-4-3920-1628-3");
-        String inputJson = super.mapToJson(bookInput);
+        BookDTO bookDTOInput = this.createBookDTOModel("978-4-3920-1628-3");
+        String inputJson = super.mapToJson(bookDTOInput);
        
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -119,11 +120,11 @@ public class BookControllerTest extends AbstractControllerTest {
         bookResult = super.mapFromJson(content, Book.class);
         assertNotNull(bookResult);
         assertNotNull(bookResult.getId());
-        assertEquals(bookResult.getIsbn(), bookInput.getIsbn());
-        assertEquals(bookResult.getTitle(), bookInput.getTitle());
-        assertEquals(bookResult.getAuthor(), bookInput.getAuthor());
-        assertEquals(bookResult.getPages(), bookInput.getPages());
-        assertEquals(bookResult.getImage(), bookInput.getImage());
+        assertEquals(bookResult.getIsbn(), bookDTOInput.getIsbn());
+        assertEquals(bookResult.getTitle(), bookDTOInput.getTitle());
+        assertEquals(bookResult.getAuthor(), bookDTOInput.getAuthor());
+        assertEquals(bookResult.getPages(), bookDTOInput.getPages());
+        assertEquals(bookResult.getImage(), bookDTOInput.getImage());
         
         LOG.log(Level.INFO, "Finished testing GET /api/books/{id}.");
     }
@@ -133,8 +134,8 @@ public class BookControllerTest extends AbstractControllerTest {
         LOG.log(Level.INFO, "Testing POST /api/books...");
         
         String uri = "/api/books";
-        Book bookInput = this.createBookModel("978-1-1104-3998-0");
-        String inputJson = super.mapToJson(bookInput);
+        BookDTO bookDTOInput = this.createBookDTOModel("978-1-1104-3998-0");
+        String inputJson = super.mapToJson(bookDTOInput);
        
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -148,11 +149,11 @@ public class BookControllerTest extends AbstractControllerTest {
         Book bookResult = super.mapFromJson(content, Book.class);
         assertNotNull(bookResult);
         assertNotNull(bookResult.getId());
-        assertEquals(bookResult.getIsbn(), bookInput.getIsbn());
-        assertEquals(bookResult.getTitle(), bookInput.getTitle());
-        assertEquals(bookResult.getAuthor(), bookInput.getAuthor());
-        assertEquals(bookResult.getPages(), bookInput.getPages());
-        assertEquals(bookResult.getImage(), bookInput.getImage());
+        assertEquals(bookResult.getIsbn(), bookDTOInput.getIsbn());
+        assertEquals(bookResult.getTitle(), bookDTOInput.getTitle());
+        assertEquals(bookResult.getAuthor(), bookDTOInput.getAuthor());
+        assertEquals(bookResult.getPages(), bookDTOInput.getPages());
+        assertEquals(bookResult.getImage(), bookDTOInput.getImage());
         
         LOG.log(Level.INFO, "Finished testing POST /api/books.");
     }
@@ -176,8 +177,8 @@ public class BookControllerTest extends AbstractControllerTest {
         // Existing Book.
         // Create Book.        
         uri = "/api/books";
-        Book bookInput = this.createBookModel("978-4-1933-0570-8");
-        String inputJson = super.mapToJson(bookInput);
+        BookDTO bookDTOInput = this.createBookDTOModel("978-4-1933-0570-8");
+        String inputJson = super.mapToJson(bookDTOInput);
        
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -223,9 +224,9 @@ public class BookControllerTest extends AbstractControllerTest {
         // Non-existing Book.
         String uri = "/api/books/123";
         
-        Book bookInput = this.createBookModel("978-5-7899-6859-8");
+        BookDTO bookDTOInput = this.createBookDTOModel("978-5-7899-6859-8");
         String newTitle = "This is a new Book title";
-        String inputJson = super.mapToJson(bookInput);
+        String inputJson = super.mapToJson(bookDTOInput);
 
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(uri)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -256,8 +257,8 @@ public class BookControllerTest extends AbstractControllerTest {
         
         // Change Book.
         uri = "/api/books/".concat(bookResult.getId());
-        bookInput.setTitle(newTitle);
-        inputJson = super.mapToJson(bookInput);
+        bookDTOInput.setTitle(newTitle);
+        inputJson = super.mapToJson(bookDTOInput);
         
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(uri)
             .contentType(MediaType.APPLICATION_JSON_VALUE)

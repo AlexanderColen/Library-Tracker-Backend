@@ -17,6 +17,7 @@
 package com.alexandercolen.library.controllers;
 
 import com.alexandercolen.library.models.UserBook;
+import com.alexandercolen.library.models.dtos.UserBookDTO;
 import com.alexandercolen.library.services.UserBookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -64,8 +65,8 @@ public class UserBookController {
     
     @ApiOperation(value = "Post a UserBook.")
     @PostMapping()
-    public UserBook postUserBook(@RequestBody UserBook userBook) {
-        return this.userBookService.createUserBook(userBook);
+    public UserBook postUserBook(@RequestBody UserBookDTO userBookDTO) {
+        return this.userBookService.createUserBook(userBookDTO);
     }
     
     @ApiOperation(value = "Delete a UserBook.")
@@ -76,8 +77,8 @@ public class UserBookController {
     
     @ApiOperation(value = "Edit a UserBook.")
     @PutMapping(value = "/{id}")
-    public UserBook putUserBook(@PathVariable("id") String id, @RequestBody UserBook userBook) {
-        return this.userBookService.editUserBook(id, userBook);
+    public UserBook putUserBook(@PathVariable("id") String id, @RequestBody UserBookDTO userBookDTO) {
+        return this.userBookService.editUserBook(id, userBookDTO);
     }
     
     @ApiOperation(value = "Fetch all UserBooks for a specific user.")

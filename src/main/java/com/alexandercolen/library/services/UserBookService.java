@@ -18,6 +18,7 @@ package com.alexandercolen.library.services;
 
 import com.alexandercolen.library.models.Book;
 import com.alexandercolen.library.models.UserBook;
+import com.alexandercolen.library.models.dtos.UserBookDTO;
 import com.alexandercolen.library.repositories.BookRepository;
 import com.alexandercolen.library.repositories.UserBookRepository;
 import java.util.List;
@@ -57,23 +58,24 @@ public class UserBookService {
     
     /**
      * Insert a UserBook in the database.
-     * @param userBook The UserBook with all the fields to insert.
+     * @param userBookDTO The UserBookDTO with all the fields to insert.
      * @return The UserBook object with the new ID.
      */
-    public UserBook createUserBook(UserBook userBook) {
+    public UserBook createUserBook(UserBookDTO userBookDTO) {
         Book book = null;
         
         // Check if ISBN is not null before searching.
-        if (userBook.getBook().getIsbn() != null) {
-            Optional<Book> bookOptional = this.bookRepository.findByISBN(userBook.getBook().getIsbn());
+        if (userBookDTO.getBook().getIsbn() != null) {
+            Optional<Book> bookOptional = this.bookRepository.findByISBN(userBookDTO.getBook().getIsbn());
             book = bookOptional.orElse(null);
         }
         
         // Save new Book if it doesn't exist yet.
         if (book == null) {
-            book = this.bookRepository.save(userBook.getBook());
+            book = this.bookRepository.save(userBookDTO.getBook());
         }
         
+        UserBook userBook = new UserBook(userBookDTO);
         userBook.setBook(book);
         
         return this.userBookRepository.save(userBook);
@@ -100,10 +102,10 @@ public class UserBookService {
     /**
      * Edit a UserBook in the database.
      * @param id The ID of the UserBook object.
-     * @param userBook The updated UserBook object.
+     * @param userBookDTO The updated UserBookDTO object.
      * @return Null if there is no UserBook with the ID, otherwise the edited UserBook object.
      */
-    public UserBook editUserBook(String id, UserBook userBook) {
+    public UserBook editUserBook(String id, UserBookDTO userBookDTO) {
         Optional<UserBook> userBookOptional = this.userBookRepository.findById(id);
         UserBook foundUserBook = userBookOptional.orElse(null);
         
@@ -111,11 +113,11 @@ public class UserBookService {
             return null;
         }
         
-        foundUserBook.setUserId(userBook.getUserId());
-        foundUserBook.setBook(userBook.getBook());
-        foundUserBook.setLocationStatus(userBook.getLocationStatus());
-        foundUserBook.setProgressStatus(userBook.getProgressStatus());
-        foundUserBook.setComment(userBook.getComment());
+        foundUserBook.setUserId(userBookDTO.getUserId());
+        foundUserBook.setBook(userBookDTO.getBook());
+        foundUserBook.setLocationStatus(userBookDTO.getLocationStatus());
+        foundUserBook.setProgressStatus(userBookDTO.getProgressStatus());
+        foundUserBook.setComment(userBookDTO.getComment());
         
         return this.userBookRepository.save(foundUserBook);
     }

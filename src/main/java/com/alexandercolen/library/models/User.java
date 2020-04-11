@@ -16,6 +16,7 @@
  */
 package com.alexandercolen.library.models;
 
+import com.alexandercolen.library.models.dtos.UserDTO;
 import java.util.Set;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -39,6 +40,21 @@ public class User {
     
     @DBRef
     private Set<Role> roles;
+
+    /**
+     * Default constructor.
+     */
+    public User() {
+    }
+
+    /**
+     * Constructor using UserDTO.
+     * @param userDTO The UserDTO object to build the User from.
+     */
+    public User(UserDTO userDTO) {
+        this.username = userDTO.getUsername();
+        this.password = userDTO.getPassword();
+    }
 
 
     /**

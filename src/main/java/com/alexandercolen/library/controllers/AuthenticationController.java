@@ -16,9 +16,9 @@
  */
 package com.alexandercolen.library.controllers;
 
-import com.alexandercolen.library.controllers.bodies.AuthenticationBody;
 import com.alexandercolen.library.configurations.JwtTokenProvider;
 import com.alexandercolen.library.models.User;
+import com.alexandercolen.library.models.dtos.UserDTO;
 import com.alexandercolen.library.repositories.UserRepository;
 import com.alexandercolen.library.services.CustomUserDetailsService;
 import io.swagger.annotations.Api;
@@ -69,10 +69,10 @@ public class AuthenticationController {
     @ApiOperation(value = "Login to the application.")
     @SuppressWarnings("rawtypes")
     @PostMapping(value = "/login")
-    public ResponseEntity login(@RequestBody AuthenticationBody data) {
+    public ResponseEntity login(@RequestBody UserDTO userDTO) {
         try {
-            String username = data.getUsername();
-            this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
+            String username = userDTO.getUsername();
+            this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, userDTO.getPassword()));
             User foundUser = this.users.findByUsername(username);
             String token = this.jwtTokenProvider.createToken(username, foundUser.getRoles());
             Map<Object, Object> model = new HashMap<>();
@@ -88,12 +88,12 @@ public class AuthenticationController {
     @ApiOperation(value = "Register to the application.")
     @SuppressWarnings("rawtypes")
     @PostMapping(value = "/register")
-    public ResponseEntity register(@RequestBody User user) {
-        User userExists = this.userService.findUserByUsername(user.getUsername());
+    public ResponseEntity register(@RequestBody UserDTO userDTO) {
+        User userExists = this.userService.findUserByUsername(userDTO.getUsername());
         if (userExists != null) {
             return new ResponseEntity<>("This username has already been taken!", HttpStatus.CONFLICT);
         }
-        this.userService.saveUser(user);
+        this.userService.saveUser(new User(userDTO));
         Map<Object, Object> model = new HashMap<>();
         model.put("message", "User registered successfully");
         return ok(model);

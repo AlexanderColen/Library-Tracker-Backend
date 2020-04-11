@@ -18,6 +18,7 @@ package com.alexandercolen.library.controllers;
 
 import com.alexandercolen.library.models.Book;
 import com.alexandercolen.library.models.UserBook;
+import com.alexandercolen.library.models.dtos.UserBookDTO;
 import com.alexandercolen.library.models.enums.BookLocationStatus;
 import com.alexandercolen.library.models.enums.BookProgressStatus;
 import java.util.logging.Level;
@@ -111,8 +112,8 @@ public class UserBookControllerTest extends AbstractControllerTest {
         content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
-        UserBook userBookInput = this.createUserBookModel(bookResult);
-        String inputJson = super.mapToJson(userBookInput);
+        UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
+        String inputJson = super.mapToJson(userBookDTOInput);
        
         uri = "/api/userbooks";
         
@@ -138,11 +139,11 @@ public class UserBookControllerTest extends AbstractControllerTest {
         userBookResult = super.mapFromJson(content, UserBook.class);
         assertNotNull(userBookResult);
         assertNotNull(userBookResult.getId());
-        assertEquals(userBookResult.getBook().getTitle(), userBookInput.getBook().getTitle());
-        assertEquals(userBookResult.getComment(), userBookInput.getComment());
-        assertEquals(userBookResult.getLocationStatus(), userBookInput.getLocationStatus());
-        assertEquals(userBookResult.getProgressStatus(), userBookInput.getProgressStatus());
-        assertEquals(userBookResult.getUserId(), userBookInput.getUserId());
+        assertEquals(userBookResult.getBook().getTitle(), userBookDTOInput.getBook().getTitle());
+        assertEquals(userBookResult.getComment(), userBookDTOInput.getComment());
+        assertEquals(userBookResult.getLocationStatus(), userBookDTOInput.getLocationStatus());
+        assertEquals(userBookResult.getProgressStatus(), userBookDTOInput.getProgressStatus());
+        assertEquals(userBookResult.getUserId(), userBookDTOInput.getUserId());
         
         LOG.log(Level.INFO, "Finished testing GET /api/userbooks/{id}.");
     }
@@ -165,8 +166,8 @@ public class UserBookControllerTest extends AbstractControllerTest {
         String content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
-        UserBook userBookInput = this.createUserBookModel(bookResult);
-        String inputJson = super.mapToJson(userBookInput);
+        UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
+        String inputJson = super.mapToJson(userBookDTOInput);
        
         uri = "/api/userbooks";
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
@@ -181,11 +182,11 @@ public class UserBookControllerTest extends AbstractControllerTest {
         UserBook userBookResult = super.mapFromJson(content, UserBook.class);
         assertNotNull(userBookResult);
         assertNotNull(userBookResult.getId());
-        assertEquals(userBookResult.getBook().getTitle(), userBookInput.getBook().getTitle());
-        assertEquals(userBookResult.getComment(), userBookInput.getComment());
-        assertEquals(userBookResult.getLocationStatus(), userBookInput.getLocationStatus());
-        assertEquals(userBookResult.getProgressStatus(), userBookInput.getProgressStatus());
-        assertEquals(userBookResult.getUserId(), userBookInput.getUserId());
+        assertEquals(userBookResult.getBook().getTitle(), userBookDTOInput.getBook().getTitle());
+        assertEquals(userBookResult.getComment(), userBookDTOInput.getComment());
+        assertEquals(userBookResult.getLocationStatus(), userBookDTOInput.getLocationStatus());
+        assertEquals(userBookResult.getProgressStatus(), userBookDTOInput.getProgressStatus());
+        assertEquals(userBookResult.getUserId(), userBookDTOInput.getUserId());
         
         // With existing Book without ISBN.
         uri = "/api/books";
@@ -200,8 +201,8 @@ public class UserBookControllerTest extends AbstractControllerTest {
         content = mvcResult.getResponse().getContentAsString();
         bookResult = super.mapFromJson(content, Book.class);
         
-        userBookInput = this.createUserBookModel(bookResult);
-        inputJson = super.mapToJson(userBookInput);
+        userBookDTOInput = this.createUserBookDTOModel(bookResult);
+        inputJson = super.mapToJson(userBookDTOInput);
        
         uri = "/api/userbooks";
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
@@ -216,18 +217,18 @@ public class UserBookControllerTest extends AbstractControllerTest {
         userBookResult = super.mapFromJson(content, UserBook.class);
         assertNotNull(userBookResult);
         assertNotNull(userBookResult.getId());
-        assertEquals(userBookResult.getBook().getTitle(), userBookInput.getBook().getTitle());
-        assertEquals(userBookResult.getComment(), userBookInput.getComment());
-        assertEquals(userBookResult.getLocationStatus(), userBookInput.getLocationStatus());
-        assertEquals(userBookResult.getProgressStatus(), userBookInput.getProgressStatus());
-        assertEquals(userBookResult.getUserId(), userBookInput.getUserId());
+        assertEquals(userBookResult.getBook().getTitle(), userBookDTOInput.getBook().getTitle());
+        assertEquals(userBookResult.getComment(), userBookDTOInput.getComment());
+        assertEquals(userBookResult.getLocationStatus(), userBookDTOInput.getLocationStatus());
+        assertEquals(userBookResult.getProgressStatus(), userBookDTOInput.getProgressStatus());
+        assertEquals(userBookResult.getUserId(), userBookDTOInput.getUserId());
         
         // Without existing Book.
         // Create Book.
         Book book = this.createBookModel("978-1-0849-0986-1");
         
-        userBookInput = this.createUserBookModel(book);
-        inputJson = super.mapToJson(userBookInput);
+        userBookDTOInput = this.createUserBookDTOModel(book);
+        inputJson = super.mapToJson(userBookDTOInput);
        
         uri = "/api/userbooks";
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
@@ -242,11 +243,11 @@ public class UserBookControllerTest extends AbstractControllerTest {
         userBookResult = super.mapFromJson(content, UserBook.class);
         assertNotNull(userBookResult);
         assertNotNull(userBookResult.getId());
-        assertEquals(userBookResult.getBook().getTitle(), userBookInput.getBook().getTitle());
-        assertEquals(userBookResult.getComment(), userBookInput.getComment());
-        assertEquals(userBookResult.getLocationStatus(), userBookInput.getLocationStatus());
-        assertEquals(userBookResult.getProgressStatus(), userBookInput.getProgressStatus());
-        assertEquals(userBookResult.getUserId(), userBookInput.getUserId());
+        assertEquals(userBookResult.getBook().getTitle(), userBookDTOInput.getBook().getTitle());
+        assertEquals(userBookResult.getComment(), userBookDTOInput.getComment());
+        assertEquals(userBookResult.getLocationStatus(), userBookDTOInput.getLocationStatus());
+        assertEquals(userBookResult.getProgressStatus(), userBookDTOInput.getProgressStatus());
+        assertEquals(userBookResult.getUserId(), userBookDTOInput.getUserId());
         
         LOG.log(Level.INFO, "Finished testing POST /api/userbooks.");
     }
@@ -284,8 +285,8 @@ public class UserBookControllerTest extends AbstractControllerTest {
         content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
-        UserBook userBookInput = this.createUserBookModel(bookResult);
-        String inputJson = super.mapToJson(userBookInput);
+        UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
+        String inputJson = super.mapToJson(userBookDTOInput);
        
         uri = "/api/userbooks";
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
@@ -345,11 +346,11 @@ public class UserBookControllerTest extends AbstractControllerTest {
         String content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
-        UserBook userBookInput = this.createUserBookModel(bookResult);
+        UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
         String newComment = "This is a different comment.";
         BookLocationStatus newLocation = BookLocationStatus.LOANED;
         BookProgressStatus newProgress = BookProgressStatus.ABANDONED;
-        String inputJson = super.mapToJson(userBookInput);
+        String inputJson = super.mapToJson(userBookDTOInput);
 
         uri = "/api/userbooks/123";
         
@@ -384,10 +385,10 @@ public class UserBookControllerTest extends AbstractControllerTest {
         
         // Change UserBook.
         uri = "/api/userbooks/".concat(userBookResult.getId());
-        userBookInput.setComment(newComment);
-        userBookInput.setLocationStatus(newLocation);
-        userBookInput.setProgressStatus(newProgress);
-        inputJson = super.mapToJson(userBookInput);
+        userBookDTOInput.setComment(newComment);
+        userBookDTOInput.setLocationStatus(newLocation);
+        userBookDTOInput.setProgressStatus(newProgress);
+        inputJson = super.mapToJson(userBookDTOInput);
         
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.put(uri)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -454,8 +455,8 @@ public class UserBookControllerTest extends AbstractControllerTest {
         content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
-        UserBook userBookInput = this.createUserBookModel(bookResult);
-        String inputJson = super.mapToJson(userBookInput);
+        UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
+        String inputJson = super.mapToJson(userBookDTOInput);
        
         uri = "/api/userbooks";
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)

@@ -14,15 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.alexandercolen.library.controllers.bodies;
+package com.alexandercolen.library.models.dtos;
 
 /**
  *
  * @author Alexander Colen
  */
-public class AuthenticationBody {
-    private String password;
+public class UserDTO {
     private String username;
+    private String password;
+
 
     /**
      * Get the value of username
@@ -30,7 +31,7 @@ public class AuthenticationBody {
      * @return the value of username
      */
     public String getUsername() {
-        return this.username;
+        return username;
     }
 
     /**
@@ -42,14 +43,13 @@ public class AuthenticationBody {
         this.username = username;
     }
 
-
     /**
      * Get the value of password
      *
      * @return the value of password
      */
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
     /**

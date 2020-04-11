@@ -16,8 +16,7 @@
  */
 package com.alexandercolen.library.controllers;
 
-import com.alexandercolen.library.controllers.bodies.AuthenticationBody;
-import com.alexandercolen.library.models.Book;
+import com.alexandercolen.library.models.dtos.UserDTO;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -62,8 +61,8 @@ public class AuthenticationControllerTest extends AbstractControllerTest {
         // New username.
         String uri = "/api/auth/register";
         String username = "JuniorTester";
-        AuthenticationBody authenticationBodyInput = this.createAuthenticationBody(username);
-        String inputJson = super.mapToJson(authenticationBodyInput);
+        UserDTO userDTOInput = this.createUserDTO(username);
+        String inputJson = super.mapToJson(userDTOInput);
        
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -97,8 +96,8 @@ public class AuthenticationControllerTest extends AbstractControllerTest {
         assertEquals(username, output.get("username"));
         
         // Faulty login.
-        authenticationBodyInput = this.createAuthenticationBody("FakeTester");
-        inputJson = super.mapToJson(authenticationBodyInput);
+        userDTOInput = this.createUserDTO("FakeTester");
+        inputJson = super.mapToJson(userDTOInput);
         
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -121,8 +120,8 @@ public class AuthenticationControllerTest extends AbstractControllerTest {
         
         // New username.
         String uri = "/api/auth/register";
-        AuthenticationBody authenticationBodyInput = this.createAuthenticationBody("MasterTester");
-        String inputJson = super.mapToJson(authenticationBodyInput);
+        UserDTO userDTOInput = this.createUserDTO("SomeUsername");
+        String inputJson = super.mapToJson(userDTOInput);
        
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
             .contentType(MediaType.APPLICATION_JSON_VALUE)

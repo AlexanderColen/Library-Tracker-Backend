@@ -16,6 +16,7 @@
  */
 package com.alexandercolen.library.models;
 
+import com.alexandercolen.library.models.dtos.UserDTO;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -49,6 +50,21 @@ public class UserTest {
     @BeforeEach
     public void setUp() {
         this.user = new User();
+    }
+    
+    @Test
+    public void testConstructors() {
+        String username = "User1";
+        String password = "NotAPassword";
+        
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
+        userDTO.setPassword(password);
+        
+        User testUser = new User(userDTO);
+        
+        assertEquals(username, testUser.getUsername());
+        assertEquals(password, testUser.getPassword());
     }
     
     @Test
