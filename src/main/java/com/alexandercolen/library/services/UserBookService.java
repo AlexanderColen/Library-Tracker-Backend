@@ -38,7 +38,7 @@ public class UserBookService {
     UserBookRepository userBookRepository;
     
     /**
-     * Get all the userBooks from the database.
+     * Get all the UserBooks from the database.
      * @return A list of UserBook objects.
      */
     public List<UserBook> getUserBooks() {
@@ -46,7 +46,7 @@ public class UserBookService {
     }
     
     /**
-     * Get a specific userBook from the database.
+     * Get a specific UserBook from the database.
      * @param id The ID of the UserBook object.
      * @return The found UserBook object. Null if not found.
      */
@@ -56,7 +56,7 @@ public class UserBookService {
     }
     
     /**
-     * Insert a userBook in the database.
+     * Insert a UserBook in the database.
      * @param userBook The UserBook with all the fields to insert.
      * @return The UserBook object with the new ID.
      */
@@ -80,21 +80,25 @@ public class UserBookService {
     }
     
     /**
-     * Delete a userBook from the database based on ID.
+     * Delete a UserBook from the database based on ID.
      * @param id The ID of the UserBook object.
-     * @return True if the deletion worked, False otherwise.
+     * @return True if the deletion worked, False if the UserBook doesn't exist.
      */
     public boolean deleteUserBook(String id) {
-        this.userBookRepository.deleteById(id);
-        
         Optional<UserBook> userBookOptional = this.userBookRepository.findById(id);
         UserBook userBook = userBookOptional.orElse(null);
         
-        return userBook == null;
+        if (userBook == null) {
+            return false;
+        }
+        
+        this.userBookRepository.deleteById(id);
+                
+        return true;
     }
     
     /**
-     * Edit a userBook in the database.
+     * Edit a UserBook in the database.
      * @param id The ID of the UserBook object.
      * @param userBook The updated UserBook object.
      * @return Null if there is no UserBook with the ID, otherwise the edited UserBook object.
@@ -117,7 +121,7 @@ public class UserBookService {
     }
     
     /**
-     * Get all the userBooks for a specific User from the database.
+     * Get all the UserBooks for a specific User from the database.
      * @param userId The ID of the User in question.
      * @return A list of UserBook objects.
      */
