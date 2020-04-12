@@ -16,12 +16,16 @@
  */
 package com.alexandercolen.library.controllers;
 
+import com.alexandercolen.library.models.User;
 import com.alexandercolen.library.models.UserBook;
 import com.alexandercolen.library.models.dtos.UserBookDTO;
+import com.alexandercolen.library.services.CustomUserDetailsService;
 import com.alexandercolen.library.services.UserBookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +52,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/userbooks")
 @RestController
 public class UserBookController {
+    @Autowired
+    CustomUserDetailsService userService;
+    
     @Autowired
     UserBookService userBookService;
 
@@ -81,9 +88,21 @@ public class UserBookController {
         return this.userBookService.editUserBook(id, userBookDTO);
     }
     
-    @ApiOperation(value = "Fetch all UserBooks for a specific user.")
+    @ApiOperation(value = "Fetch all UserBooks for a specific User.")
     @GetMapping(value="/user/{userId}")
     public Iterable<UserBook> getUserBooksForUser(@PathVariable("userId") String userId) {
         return this.userBookService.getUserBooksForUser(userId);
+    }
+    
+    @ApiOperation(value = "Fetch statistics for a specific User.")
+    @GetMapping(value="/user/{username}/statistics")
+    public ResponseEntity getStatisticsForUser(@PathVariable("username") String username) {
+        User foundUser = this.userService.findUserByUsername(username);
+        
+        if (foundUser == null) {
+            return new ResponseEntity<>("No user found with this username!", HttpStatus.NOT_FOUND);
+        }
+        
+        return ResponseEntity.ok(this.userBookService.getUserBookStatisticsForUser(foundUser.getId()));
     }
 }

@@ -18,6 +18,7 @@ package com.alexandercolen.library.controllers;
 
 import com.alexandercolen.library.LibraryApplication;
 import com.alexandercolen.library.models.Book;
+import com.alexandercolen.library.models.User;
 import com.alexandercolen.library.models.UserBook;
 import com.alexandercolen.library.models.dtos.BookDTO;
 import com.alexandercolen.library.models.dtos.UserBookDTO;
@@ -28,6 +29,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +42,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -47,7 +54,12 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(classes = LibraryApplication.class)
 @WebAppConfiguration
 public abstract class AbstractControllerTest {
+    private static final Logger LOG = Logger.getLogger(AbstractControllerTest.class.getName());
+    
     protected MockMvc mockMvc;
+    protected List<Book> createdBooks;
+    protected List<User> createdUsers;
+    protected List<UserBook> createdUserBooks;
 
     @Autowired
     WebApplicationContext webApplicationContext;
@@ -55,6 +67,31 @@ public abstract class AbstractControllerTest {
     @BeforeEach
     protected void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        this.createdBooks = new ArrayList<>();
+        this.createdUsers = new ArrayList<>();
+        this.createdUserBooks = new ArrayList<>();
+    }
+    
+    @AfterEach
+    protected void tearDown() {
+        try {
+            LOG.log(Level.INFO, "Deleting created test Books...");
+            for (Book book : this.createdBooks) {
+                this.deleteBook(book.getId());
+            }
+
+            LOG.log(Level.INFO, "Deleting created test Users...");
+            for (User user : this.createdUsers) {
+                this.deleteUser(user.getId());
+            }
+
+            LOG.log(Level.INFO, "Deleting created test UserBooks...");
+            for (UserBook userBook : this.createdUserBooks) {
+                this.deleteUserBook(userBook.getId());
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, e.getMessage());
+        }
     }
    
     protected String mapToJson(Object obj) throws JsonProcessingException {
@@ -127,5 +164,38 @@ public abstract class AbstractControllerTest {
         userDTO.setUsername(username);
         userDTO.setPassword(password);
         return userDTO;
+    }
+    
+    /**
+     * Delete a Book if it exists.
+     * @param bookId The ID of the Book to delete.
+     * @throws java.lang.Exception
+     */
+    protected void deleteBook(String bookId) throws Exception {
+        String uri = "/api/books/".concat(bookId);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.delete(uri));
+    }
+    
+    /**
+     * Delete a User if it exists.
+     * @param userId The ID of the User to delete.
+     * @throws java.lang.Exception
+     */
+    protected void deleteUser(String userId) throws Exception {
+        String uri = "/api/auth/".concat(userId);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.delete(uri));
+    }
+    
+    /**
+     * Delete a UserBook if it exists.
+     * @param userBookId The ID of the UserBook to delete.
+     * @throws java.lang.Exception
+     */
+    protected void deleteUserBook(String userBookId) throws Exception {
+        String uri = "/api/userbooks/".concat(userBookId);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.delete(uri));
     }
 }

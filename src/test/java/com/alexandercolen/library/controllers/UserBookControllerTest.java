@@ -17,10 +17,15 @@
 package com.alexandercolen.library.controllers;
 
 import com.alexandercolen.library.models.Book;
+import com.alexandercolen.library.models.User;
 import com.alexandercolen.library.models.UserBook;
+import com.alexandercolen.library.models.dtos.BookDTO;
 import com.alexandercolen.library.models.dtos.UserBookDTO;
+import com.alexandercolen.library.models.dtos.UserDTO;
 import com.alexandercolen.library.models.enums.BookLocationStatus;
 import com.alexandercolen.library.models.enums.BookProgressStatus;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterAll;
@@ -74,7 +79,7 @@ public class UserBookControllerTest extends AbstractControllerTest {
 
         String content = mvcResult.getResponse().getContentAsString();
         UserBook[] userBookList = super.mapFromJson(content, UserBook[].class);
-        assertTrue(userBookList.length > 0);
+        assertFalse(userBookList.length > 0);
         
         LOG.log(Level.INFO, "Finished testing GET /api/userbooks.");
     }
@@ -96,9 +101,7 @@ public class UserBookControllerTest extends AbstractControllerTest {
         String content = mvcResult.getResponse().getContentAsString();
         assertEquals("", content);
         
-        // Existing UserBook.
-        // Create UserBook.
-      
+        // Existing UserBook.      
         // Create Book.
         uri = "/api/books";
         Book bookInput = this.createBookModel("978-7-8767-5875-4");
@@ -112,6 +115,11 @@ public class UserBookControllerTest extends AbstractControllerTest {
         content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdBooks.add(bookResult);
+        }
+        
+        // Create UserBook
         UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
         String inputJson = super.mapToJson(userBookDTOInput);
        
@@ -124,6 +132,10 @@ public class UserBookControllerTest extends AbstractControllerTest {
 
         content = mvcResult.getResponse().getContentAsString();
         UserBook userBookResult = super.mapFromJson(content, UserBook.class);
+        
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdUserBooks.add(userBookResult);
+        }
         
         // Test created UserBook.
         uri = "/api/userbooks/".concat(userBookResult.getId());
@@ -166,6 +178,10 @@ public class UserBookControllerTest extends AbstractControllerTest {
         String content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdBooks.add(bookResult);
+        }
+        
         UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
         String inputJson = super.mapToJson(userBookDTOInput);
        
@@ -188,6 +204,10 @@ public class UserBookControllerTest extends AbstractControllerTest {
         assertEquals(userBookResult.getProgressStatus(), userBookDTOInput.getProgressStatus());
         assertEquals(userBookResult.getUserId(), userBookDTOInput.getUserId());
         
+        if (status == 200) {
+            this.createdUserBooks.add(userBookResult);
+        }
+        
         // With existing Book without ISBN.
         uri = "/api/books";
         bookInput = this.createBookModel(null);
@@ -200,6 +220,10 @@ public class UserBookControllerTest extends AbstractControllerTest {
 
         content = mvcResult.getResponse().getContentAsString();
         bookResult = super.mapFromJson(content, Book.class);
+        
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdBooks.add(bookResult);
+        }
         
         userBookDTOInput = this.createUserBookDTOModel(bookResult);
         inputJson = super.mapToJson(userBookDTOInput);
@@ -222,6 +246,10 @@ public class UserBookControllerTest extends AbstractControllerTest {
         assertEquals(userBookResult.getLocationStatus(), userBookDTOInput.getLocationStatus());
         assertEquals(userBookResult.getProgressStatus(), userBookDTOInput.getProgressStatus());
         assertEquals(userBookResult.getUserId(), userBookDTOInput.getUserId());
+        
+        if (status == 200) {
+            this.createdUserBooks.add(userBookResult);
+        }
         
         // Without existing Book.
         // Create Book.
@@ -249,6 +277,11 @@ public class UserBookControllerTest extends AbstractControllerTest {
         assertEquals(userBookResult.getProgressStatus(), userBookDTOInput.getProgressStatus());
         assertEquals(userBookResult.getUserId(), userBookDTOInput.getUserId());
         
+        if (status == 200) {
+            this.createdUserBooks.add(userBookResult);
+            this.createdBooks.add(userBookResult.getBook());
+        }
+        
         LOG.log(Level.INFO, "Finished testing POST /api/userbooks.");
     }
     
@@ -269,9 +302,7 @@ public class UserBookControllerTest extends AbstractControllerTest {
         assertNotEquals("true", content);
         assertEquals("false", content);
         
-        // Existing UserBook.
-        // Create UserBook.
-        
+        // Existing UserBook.        
         // Create Book.
         uri = "/api/books";
         Book bookInput = this.createBookModel("978-9-4981-3006-2");
@@ -285,6 +316,11 @@ public class UserBookControllerTest extends AbstractControllerTest {
         content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdBooks.add(bookResult);
+        }
+        
+        // Create UserBook.
         UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
         String inputJson = super.mapToJson(userBookDTOInput);
        
@@ -332,7 +368,6 @@ public class UserBookControllerTest extends AbstractControllerTest {
         LOG.log(Level.INFO, "Testing PUT /api/userbooks/{id}...");
         
         // Non-existing UserBook.
-        
         // Create Book.
         String uri = "/api/books";
         Book bookInput = this.createBookModel("978-3-9206-5586-4");
@@ -345,6 +380,10 @@ public class UserBookControllerTest extends AbstractControllerTest {
 
         String content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
+        
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdBooks.add(bookResult);
+        }
         
         UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
         String newComment = "This is a different comment.";
@@ -382,6 +421,10 @@ public class UserBookControllerTest extends AbstractControllerTest {
         assertNotEquals(newComment, userBookResult.getComment());
         assertNotEquals(newLocation, userBookResult.getLocationStatus());
         assertNotEquals(newProgress, userBookResult.getProgressStatus());
+        
+        if (status == 200) {
+            this.createdUserBooks.add(userBookResult);
+        }
         
         // Change UserBook.
         uri = "/api/userbooks/".concat(userBookResult.getId());
@@ -440,8 +483,6 @@ public class UserBookControllerTest extends AbstractControllerTest {
         assertFalse(userBookList.length > 0);
         
         // Existing UserID.
-        // Create UserBook.
-        
         // Create Book.
         uri = "/api/books";
         Book bookInput = this.createBookModel("978-3-0729-8981-7");
@@ -455,6 +496,11 @@ public class UserBookControllerTest extends AbstractControllerTest {
         content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdBooks.add(bookResult);
+        }
+        
+        // Create UserBook.
         UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
         String inputJson = super.mapToJson(userBookDTOInput);
        
@@ -470,6 +516,10 @@ public class UserBookControllerTest extends AbstractControllerTest {
         content = mvcResult.getResponse().getContentAsString();
         UserBook userBookResult = super.mapFromJson(content, UserBook.class);
         
+        if (status == 200) {
+            this.createdUserBooks.add(userBookResult);
+        }
+        
         // Test created UserBook.
         uri = "/api/userbooks/user/".concat(userBookResult.getUserId());
 
@@ -484,5 +534,228 @@ public class UserBookControllerTest extends AbstractControllerTest {
         assertTrue(userBookList.length > 0);
         
         LOG.log(Level.INFO, "Finished testing GET /api/userbooks/user/{userId}.");
+    }
+    
+    @Test
+    public void testGetStatisticsForUser() throws Exception {
+        LOG.log(Level.INFO, "Testing GET /api/userbooks/user/{username}/statistics...");
+        
+        String totalPages = "totalPages";
+        String booksRead = "booksRead";
+        String booksUnread = "booksUnread";
+        String booksReading = "booksReading";
+        String booksPlanToRead = "booksPlanToRead";
+        String booksAbandoned = "booksAbandoned";
+        String booksOwned = "booksOwned";
+        String booksLoaned = "booksLoaned";
+        String booksBorrowed = "booksBorrowed";
+        String booksWished = "booksWished";
+        
+        // Non-existant User.
+        String uri = "/api/userbooks/user/FakeUser/statistics";
+
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(uri)
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(404, status);
+
+        String content = mvcResult.getResponse().getContentAsString();
+        assertEquals("No user found with this username!", content);
+        
+        // Existing User.
+        // Create User.
+        uri = "/api/auth/register";
+        String username = "SomeUsername";
+        UserDTO userDTOInput = this.createUserDTO(username);
+        String inputJson = super.mapToJson(userDTOInput);
+       
+        this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson));
+        
+        uri = "/api/auth/login";
+
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson))
+            .andReturn();
+
+        content = mvcResult.getResponse().getContentAsString();
+        Map<Object, Object> output = super.mapFromJson(content, HashMap.class);
+        User createdUser = new User();
+        String userId = output.get("userId").toString();
+        createdUser.setId(userId);
+        this.createdUsers.add(createdUser);
+        
+        // No UserBooks.
+        uri = "/api/userbooks/user/".concat(username).concat("/statistics");
+
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(uri)
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andReturn();
+
+        status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        content = mvcResult.getResponse().getContentAsString();
+        output = super.mapFromJson(content, HashMap.class);
+        assertNotNull(output);
+        assertEquals(0, output.get(totalPages));
+        assertEquals(0, output.get(booksRead));
+        assertEquals(0, output.get(booksUnread));
+        assertEquals(0, output.get(booksReading));
+        assertEquals(0, output.get(booksPlanToRead));
+        assertEquals(0, output.get(booksAbandoned));
+        assertEquals(0, output.get(booksOwned));
+        assertEquals(0, output.get(booksLoaned));
+        assertEquals(0, output.get(booksBorrowed));
+        assertEquals(0, output.get(booksWished));
+        
+        // Existing UserBooks.
+        // Create Book.
+        uri = "/api/books";
+        BookDTO bookDTOInput = this.createBookDTOModel("978-0-1995-9230-2");
+        inputJson = super.mapToJson(bookDTOInput);
+       
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson))
+            .andReturn();
+
+        content = mvcResult.getResponse().getContentAsString();
+        Book bookResult = super.mapFromJson(content, Book.class);
+        
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdBooks.add(bookResult);
+        }
+        
+        // Create OWNED READ UserBook.
+        UserBookDTO userBookDTOInput = this.createUserBookDTOModel(bookResult);
+        userBookDTOInput.setLocationStatus(BookLocationStatus.OWNED);
+        userBookDTOInput.setProgressStatus(BookProgressStatus.READ);
+        userBookDTOInput.setUserId(userId);
+        inputJson = super.mapToJson(userBookDTOInput);
+       
+        uri = "/api/userbooks";
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson))
+            .andReturn();
+        
+        content = mvcResult.getResponse().getContentAsString();
+        UserBook userBookResult = super.mapFromJson(content, UserBook.class);
+        
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdUserBooks.add(userBookResult);
+        }
+        
+        // Create LOANED UNREAD UserBook.
+        userBookDTOInput = this.createUserBookDTOModel(bookResult);
+        userBookDTOInput.setLocationStatus(BookLocationStatus.LOANED);
+        userBookDTOInput.setProgressStatus(BookProgressStatus.UNREAD);
+        userBookDTOInput.setUserId(userId);
+        inputJson = super.mapToJson(userBookDTOInput);
+       
+        uri = "/api/userbooks";
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson))
+            .andReturn();
+        
+        content = mvcResult.getResponse().getContentAsString();
+        userBookResult = super.mapFromJson(content, UserBook.class);
+        
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdUserBooks.add(userBookResult);
+        }
+        
+        // Create BORROWED ABANDONED UserBook.
+        userBookDTOInput = this.createUserBookDTOModel(bookResult);
+        userBookDTOInput.setLocationStatus(BookLocationStatus.BORROWED);
+        userBookDTOInput.setProgressStatus(BookProgressStatus.ABANDONED);
+        userBookDTOInput.setUserId(userId);
+        inputJson = super.mapToJson(userBookDTOInput);
+       
+        uri = "/api/userbooks";
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson))
+            .andReturn();
+        
+        content = mvcResult.getResponse().getContentAsString();
+        userBookResult = super.mapFromJson(content, UserBook.class);
+        
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdUserBooks.add(userBookResult);
+        }
+        
+        // Create WISHED PLAN_TO_READ UserBook.
+        userBookDTOInput = this.createUserBookDTOModel(bookResult);
+        userBookDTOInput.setLocationStatus(BookLocationStatus.WISHED);
+        userBookDTOInput.setProgressStatus(BookProgressStatus.PLAN_TO_READ);
+        userBookDTOInput.setUserId(userId);
+        inputJson = super.mapToJson(userBookDTOInput);
+       
+        uri = "/api/userbooks";
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson))
+            .andReturn();
+        
+        content = mvcResult.getResponse().getContentAsString();
+        userBookResult = super.mapFromJson(content, UserBook.class);
+        
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdUserBooks.add(userBookResult);
+        }
+        
+        // Create OWNED READING UserBook.
+        userBookDTOInput = this.createUserBookDTOModel(bookResult);
+        userBookDTOInput.setLocationStatus(BookLocationStatus.OWNED);
+        userBookDTOInput.setProgressStatus(BookProgressStatus.READING);
+        userBookDTOInput.setUserId(userId);
+        inputJson = super.mapToJson(userBookDTOInput);
+       
+        uri = "/api/userbooks";
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson))
+            .andReturn();
+        
+        content = mvcResult.getResponse().getContentAsString();
+        userBookResult = super.mapFromJson(content, UserBook.class);
+        
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdUserBooks.add(userBookResult);
+        }
+        
+        // Check statistics.
+        // Total pages should be 123. (Because only 1 Book was marked as read.)
+        // Created UserBooks location: OWNED 2 - LOANED 1 - BORROWED 1 - WISHED 1.
+        // Created UserBooks progress: READ 1 - UNREAD 1 - PLAN_TO_READ 1 - READING 1 - ABANDONED 1.
+        uri = "/api/userbooks/user/".concat(username).concat("/statistics");
+
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(uri)
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+            .andReturn();
+
+        status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        content = mvcResult.getResponse().getContentAsString();
+        output = super.mapFromJson(content, HashMap.class);
+        assertNotNull(output);
+        assertEquals(123, output.get(totalPages));
+        assertEquals(1, output.get(booksRead));
+        assertEquals(1, output.get(booksUnread));
+        assertEquals(1, output.get(booksReading));
+        assertEquals(1, output.get(booksPlanToRead));
+        assertEquals(1, output.get(booksAbandoned));
+        assertEquals(2, output.get(booksOwned));
+        assertEquals(1, output.get(booksLoaned));
+        assertEquals(1, output.get(booksBorrowed));
+        assertEquals(1, output.get(booksWished));
     }
 }

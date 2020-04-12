@@ -21,8 +21,12 @@ import com.alexandercolen.library.models.UserBook;
 import com.alexandercolen.library.models.dtos.UserBookDTO;
 import com.alexandercolen.library.repositories.BookRepository;
 import com.alexandercolen.library.repositories.UserBookRepository;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +36,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserBookService {
+    private static final Logger LOG = Logger.getLogger(UserBookService.class.getName());
+    
     @Autowired
     BookRepository bookRepository;
     
@@ -129,5 +135,82 @@ public class UserBookService {
      */
     public Iterable<UserBook> getUserBooksForUser(String userId) {
         return this.userBookRepository.findByUserId(userId);
+    }
+    
+    public Map getUserBookStatisticsForUser(String userId) {
+        Iterable<UserBook> foundUserBooks = this.userBookRepository.findByUserId(userId);
+        
+        Map<String, Integer> statistics = new HashMap<>();
+        
+        int totalPages = 0;
+        // Progress statistics.
+        int booksRead = 0;
+        int booksUnread = 0;
+        int booksReading = 0;
+        int booksPlanToRead = 0;
+        int booksAbandoned = 0;
+        // Location statistics.
+        int booksOwned = 0;
+        int booksLoaned = 0;
+        int booksBorrowed = 0;
+        int booksWished = 0;
+        
+        for (UserBook userBook : foundUserBooks) {
+            // Switch the ProgressStatus.
+            switch (userBook.getProgressStatus()) {
+                case READ:
+                    booksRead += 1;
+                    totalPages += userBook.getBook().getPages();
+                    break;
+                case UNREAD:
+                    booksUnread += 1;
+                    break;
+                case READING:
+                    booksReading += 1;
+                    break;
+                case PLAN_TO_READ:
+                    booksPlanToRead += 1;
+                    break;
+                case ABANDONED:
+                    booksAbandoned += 1;
+                    break;
+                default:
+                    LOG.log(Level.WARNING, "Unknown BookProgressStatus: ".concat(userBook.getProgressStatus().toString()));
+                    break;
+            }
+            // Switch the LocationStatus.
+            switch (userBook.getLocationStatus()) {
+                case OWNED:
+                    booksOwned += 1;
+                    break;
+                case LOANED:
+                    booksLoaned += 1;
+                    break;
+                case BORROWED:
+                    booksBorrowed += 1;
+                    break;
+                case WISHED:
+                    booksWished += 1;
+                    break;
+                default:
+                    LOG.log(Level.WARNING, "Unknown BookLocationStatus: ".concat(userBook.getProgressStatus().toString()));
+                    break;
+            }
+        }
+        
+        statistics.put("totalPages", totalPages);
+        // Progress statistics.
+        statistics.put("booksRead", booksRead);
+        statistics.put("booksUnread", booksUnread);
+        statistics.put("booksReading", booksReading);
+        statistics.put("booksPlanToRead", booksPlanToRead);
+        statistics.put("booksAbandoned", booksAbandoned);
+        // Location statistics,
+        statistics.put("booksOwned", booksOwned);
+        statistics.put("booksLoaned", booksLoaned);
+        statistics.put("booksBorrowed", booksBorrowed);
+        statistics.put("booksWished", booksWished);
+        
+        return statistics;
     }
 }

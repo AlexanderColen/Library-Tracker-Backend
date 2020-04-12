@@ -23,6 +23,7 @@ import com.alexandercolen.library.repositories.UserRepository;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -61,6 +62,19 @@ public class CustomUserDetailsService implements UserDetailsService {
         roles.add(userRole);
         user.setRoles(new HashSet<>(roles));
         this.userRepository.save(user);
+    }
+    
+    public boolean deleteUser(String id) {
+        Optional<User> userOptional = this.userRepository.findById(id);
+        User user = userOptional.orElse(null);
+        
+        if (user == null) {
+            return false;
+        }
+        
+        this.userRepository.deleteById(id);
+        
+        return true;
     }
 
     @Override

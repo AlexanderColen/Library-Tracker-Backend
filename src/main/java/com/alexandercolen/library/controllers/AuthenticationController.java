@@ -23,7 +23,6 @@ import com.alexandercolen.library.repositories.UserRepository;
 import com.alexandercolen.library.services.CustomUserDetailsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import static org.springframework.http.ResponseEntity.ok;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,11 +76,11 @@ public class AuthenticationController {
             this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, userDTO.getPassword()));
             User foundUser = this.users.findByUsername(username);
             String token = this.jwtTokenProvider.createToken(username, foundUser.getRoles());
-            Map<Object, Object> model = new HashMap<>();
+            Map<String, String> model = new HashMap<>();
             model.put("username", username);
             model.put("token", token);
             model.put("userId", foundUser.getId());
-            return ok(model);
+            return ResponseEntity.ok(model);
         } catch (AuthenticationException e) {
             return new ResponseEntity<>("Login failed. Nice try.", HttpStatus.UNAUTHORIZED);
         }
@@ -94,8 +95,14 @@ public class AuthenticationController {
             return new ResponseEntity<>("This username has already been taken!", HttpStatus.CONFLICT);
         }
         this.userService.saveUser(new User(userDTO));
-        Map<Object, Object> model = new HashMap<>();
+        Map<String, String> model = new HashMap<>();
         model.put("message", "User registered successfully");
-        return ok(model);
+        return ResponseEntity.ok(model);
+    }
+    
+    @ApiOperation(value = "Deletes a User")
+    @DeleteMapping(value = "/{id}")
+    public boolean deleteUser(@PathVariable("id") String id) {
+        return this.userService.deleteUser(id);
     }
 }

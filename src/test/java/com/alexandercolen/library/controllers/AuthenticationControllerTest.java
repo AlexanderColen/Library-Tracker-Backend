@@ -16,6 +16,7 @@
  */
 package com.alexandercolen.library.controllers;
 
+import com.alexandercolen.library.models.User;
 import com.alexandercolen.library.models.dtos.UserDTO;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -95,6 +97,12 @@ public class AuthenticationControllerTest extends AbstractControllerTest {
         assertNotNull(output.get("userId"));
         assertEquals(username, output.get("username"));
         
+        if (status == 200) {
+            User createdUser = new User();
+            createdUser.setId(output.get("userId").toString());
+            this.createdUsers.add(createdUser);
+        }
+        
         // Faulty login.
         userDTOInput = this.createUserDTO("FakeTester");
         inputJson = super.mapToJson(userDTOInput);
@@ -136,6 +144,20 @@ public class AuthenticationControllerTest extends AbstractControllerTest {
         assertNotNull(output);
         assertEquals("User registered successfully", output.get("message"));
         
+        // Fetch User's ID for future removal.
+        if (status == 200) {
+            mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(inputJson))
+                .andReturn();
+
+            content = mvcResult.getResponse().getContentAsString();
+            output = super.mapFromJson(content, HashMap.class);
+            User createdUser = new User();
+            createdUser.setId(output.get("userId").toString());
+            this.createdUsers.add(createdUser);
+        }
+        
         // Duplicate username.
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -150,5 +172,71 @@ public class AuthenticationControllerTest extends AbstractControllerTest {
         assertNotNull(content);
         
         LOG.log(Level.INFO, "Finished testing POST /api/auth/register.");
+    }
+    
+    @Test
+    public void testDeleteUser() throws Exception {
+        LOG.log(Level.INFO, "Testing DELETE /api/auth/{id}...");
+        
+        // Non-existing User.
+        String uri = "/api/auth/123";
+
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.delete(uri))
+            .andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        String content = mvcResult.getResponse().getContentAsString();
+        assertNotEquals("true", content);
+        assertEquals("false", content);
+        
+        // Existing User.
+        // Create User.        
+        uri = "/api/auth/register";
+        UserDTO userDTOInput = this.createUserDTO("SomeUsername");
+        String inputJson = super.mapToJson(userDTOInput);
+       
+        this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson));
+        
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(inputJson))
+                .andReturn();
+
+        content = mvcResult.getResponse().getContentAsString();
+        Map<Object, Object> output = super.mapFromJson(content, HashMap.class);
+        
+        // Test created User deletion.
+        uri = "/api/auth/".concat(output.get("userId").toString());
+
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.delete(uri))
+            .andReturn();
+
+        status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        content = mvcResult.getResponse().getContentAsString();
+        assertEquals("true", content);
+        assertNotEquals("false", content);
+        
+        // Test if specific User exists afterwards.
+        uri = "/api/auth/login";
+        
+        mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post(uri)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(inputJson))
+            .andReturn();
+
+        status = mvcResult.getResponse().getStatus();
+        assertEquals(401, status);
+
+        content = mvcResult.getResponse().getContentAsString();
+        assertEquals("Login failed. Nice try.", content);
+        assertNotNull(content);
+        
+        LOG.log(Level.INFO, "Finished testing DELETE /api/books/{id}.");
     }
 }

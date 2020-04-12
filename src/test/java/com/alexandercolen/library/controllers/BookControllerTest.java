@@ -106,6 +106,10 @@ public class BookControllerTest extends AbstractControllerTest {
         content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
+        if (mvcResult.getResponse().getStatus() == 200) {
+            this.createdBooks.add(bookResult);
+        }
+        
         // Test created Book.
         uri = "/api/books/".concat(bookResult.getId());
 
@@ -147,6 +151,11 @@ public class BookControllerTest extends AbstractControllerTest {
 
         String content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
+        
+        if (status == 200) {
+            this.createdBooks.add(bookResult);
+        }
+        
         assertNotNull(bookResult);
         assertNotNull(bookResult.getId());
         assertEquals(bookResult.getIsbn(), bookDTOInput.getIsbn());
@@ -192,7 +201,7 @@ public class BookControllerTest extends AbstractControllerTest {
         content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
         
-        // Test created Book.
+        // Test created Book deletion.
         uri = "/api/books/".concat(bookResult.getId());
 
         mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.delete(uri))
@@ -254,6 +263,11 @@ public class BookControllerTest extends AbstractControllerTest {
 
         content = mvcResult.getResponse().getContentAsString();
         Book bookResult = super.mapFromJson(content, Book.class);
+        
+        if (status == 200) {
+            this.createdBooks.add(bookResult);
+        }
+        
         assertNotNull(bookResult);
         assertNotEquals(newTitle, bookResult.getTitle());
         
