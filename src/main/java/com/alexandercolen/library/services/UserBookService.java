@@ -175,7 +175,7 @@ public class UserBookService {
                     booksAbandoned += 1;
                     break;
                 default:
-                    LOG.log(Level.WARNING, "Unknown BookProgressStatus: ".concat(userBook.getProgressStatus().toString()));
+                    LOG.log(Level.WARNING, "Unknown BookProgressStatus: {0} ", userBook.getProgressStatus().toString());
                     break;
             }
             // Switch the LocationStatus.
@@ -193,7 +193,7 @@ public class UserBookService {
                     booksWished += 1;
                     break;
                 default:
-                    LOG.log(Level.WARNING, "Unknown BookLocationStatus: ".concat(userBook.getProgressStatus().toString()));
+                    LOG.log(Level.WARNING, "Unknown BookLocationStatus: {0} ", userBook.getLocationStatus().toString());
                     break;
             }
         }
