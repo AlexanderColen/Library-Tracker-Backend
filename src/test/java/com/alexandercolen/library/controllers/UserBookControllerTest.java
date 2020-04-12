@@ -79,7 +79,7 @@ public class UserBookControllerTest extends AbstractControllerTest {
 
         String content = mvcResult.getResponse().getContentAsString();
         UserBook[] userBookList = super.mapFromJson(content, UserBook[].class);
-        assertFalse(userBookList.length > 0);
+        assertNotNull(userBookList);
         
         LOG.log(Level.INFO, "Finished testing GET /api/userbooks.");
     }

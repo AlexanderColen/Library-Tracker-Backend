@@ -51,29 +51,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().disable().csrf().disable().sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-            .antMatchers("/api/auth/login").permitAll()
-            .antMatchers("/api/auth/register").permitAll()
-            .antMatchers("/swagger-ui.html").permitAll()
-            .antMatchers("/api/products/**").hasAuthority("ADMIN").anyRequest().authenticated().and().csrf()
-            .disable().exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint()).and()
-            .apply(new JwtConfigurer(this.jwtTokenProvider));
-        http.cors();
+    protected void configure(final HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.httpBasic().disable().csrf().disable().sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+                    .antMatchers("/swagger-ui.html").permitAll()
+                    .antMatchers("/api/auth/login").permitAll()
+                    .antMatchers("/api/auth/register").permitAll()
+                    .antMatchers("/api/userbooks/**").authenticated()
+                    .antMatchers("/api/books/**").authenticated()
+                    .antMatchers("/api/barcode/**").authenticated().and()
+                    .csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedEntryPoint()).and()
+                    .apply(new JwtConfigurer(this.jwtTokenProvider));
+        httpSecurity.cors();
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/resources/**",
-                                   "/static/**",
-                                   "/css/**",
-                                   "/js/**",
-                                   "/images/**",
-                                   "/webjars/**",
-                                   "/swagger-resources/**",
-                                   "/swagger-ui.html",
-                                   "/v2/api-docs");
+    public void configure(WebSecurity webSecurity) throws Exception {
+        webSecurity.ignoring().antMatchers("/resources/**",
+                                           "/static/**",
+                                           "/css/**",
+                                           "/js/**",
+                                           "/images/**",
+                                           "/webjars/**",
+                                           "/swagger-resources/**",
+                                           "/swagger-ui.html",
+                                           "/v2/api-docs");
     }
 
     @Bean

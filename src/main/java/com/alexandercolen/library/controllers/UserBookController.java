@@ -43,12 +43,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "UserBook Controller")
 @CrossOrigin(
-        origins = { "*" },
-        methods = { RequestMethod.GET,
-                    RequestMethod.POST,
-                    RequestMethod.PUT,
-                    RequestMethod.DELETE,
-                    RequestMethod.OPTIONS})
+    origins = "*",
+    methods = { RequestMethod.GET,
+                RequestMethod.POST,
+                RequestMethod.PUT,
+                RequestMethod.DELETE,
+                RequestMethod.OPTIONS})
 @RequestMapping("/api/userbooks")
 @RestController
 public class UserBookController {

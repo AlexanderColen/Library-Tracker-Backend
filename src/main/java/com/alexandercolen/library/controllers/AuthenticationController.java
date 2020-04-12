@@ -46,12 +46,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "Authentication Controller")
 @CrossOrigin(
-        origins = { "*" },
-        methods = { RequestMethod.GET,
-                    RequestMethod.POST,
-                    RequestMethod.PUT,
-                    RequestMethod.DELETE,
-                    RequestMethod.OPTIONS})
+    origins = "*",
+    methods = { RequestMethod.GET,
+                RequestMethod.POST,
+                RequestMethod.PUT,
+                RequestMethod.DELETE,
+                RequestMethod.OPTIONS})
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
